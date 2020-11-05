@@ -12,6 +12,7 @@
 	</sql>
 	<select id="selectTestBoardList" resultType="tb">
 		select <include refid="testBoardCols"/> from test_board
+		order by tb_num desc
 	</select>
 	<select id="selectTestBoard" resultType="tb">
 		select <include refid="testBoardCols"/> from test_board

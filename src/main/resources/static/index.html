@@ -7,39 +7,63 @@
 <script src="/jqgrid/js/jquery-1.7.2.min.js"></script>
 <script src="/jqgrid/js/i18n/grid.locale-kr.js"></script>
 <script src="/jqgrid/js/jquery.jqGrid.min.js"></script>
+<script src="/js/RionGrid.js"></script>
+<style>
+ul li{
+	list-style:none;
+	float:left;
+	width:20px;
+	margin-left:5px;
+	text-align:center;
+	border : solid 1px;
+}
+ul li.active{
+	background-color:blue;
+	color:white;
+}
+</style>
 </head>
 <body>
 <h3>JQGRID EXAM</h3>
 <div class="container">
-	<table id="jqGrid"></table>
+	<table id="grid" border="1"></table>
+	<div id="page"></div>
 </div>
-<script>
+<script>	
+var pageNum = 11;
+var pageSize = 10;
+var blockSize = 10;
 $(document).ready(function(){
-	$('#jqGrid').jqGrid({
-		datatype:'local',
-		height :300,
-		width : 500,
-		colModel:[
+	getData(pageNum);
+})
+function getData(pageNum){
+	this.pageNum = pageNum;
+	var config = {
+		url : '/tbs/' + pageNum + '/' + pageSize,
+		cols:[
 			{label:'번호',name:'tbNum',width:50,key:true},
 			{label:'제목',name:'tbTitle',width:200},
 			{label:'작성자',name:'tbWriter',width:100},
 			{label:'작성일',name:'tbCredat',width:150}
 		],
-		onSelectRow : function(rowId){
-			localStorage.setItem('tbNum',rowId);
-			location.href='/view.html';
+		pageCallBack : generatePagination
+	}
+	$('#grid').CustomGrid(config);
+}
+
+function generatePagination(total){
+	var html='<ul>';
+	var sNum = Math.floor(pageNum/blockSize)*10 + 1;
+	for(var i=sNum;i<=sNum+(blockSize-1);i++){
+		var className = '';
+		if(pageNum==i){
+			className = 'class="active"';
 		}
-	})
-	$.ajax({
-		url:'/tbs',
-		method:'GET',
-		success:function(res){
-			$("#jqGrid").jqGrid('setGridParam', { data: res});
-			$("#jqGrid").trigger('reloadGrid');
-		}
-	})
-	
-})
+		html += '<a href="javascript:void(0)" onclick="getData(' + i + ')"><li ' + className + '>' + i + '</li></a>';
+	}
+	html += '</ul>';
+	$('#page').html(html);
+}
 </script>
 </body>
 </html>

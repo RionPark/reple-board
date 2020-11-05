@@ -1,7 +1,5 @@
 package com.test.board.controller;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.test.board.service.TestBoardService;
 import com.test.board.vo.ResultVO;
 import com.test.board.vo.TestBoardVO;
@@ -18,11 +18,13 @@ import com.test.board.vo.TestBoardVO;
 public class TestBoardController {
 	@Resource
 	private TestBoardService tbService;
-	@GetMapping("/tbs")
-	public List<TestBoardVO> getTestBoards(TestBoardVO tb){
-		return tbService.selectTestBoardList(tb);
+	@GetMapping("/tbs/{pageNum}/{pageSize}")
+	public PageInfo<TestBoardVO> getTestBoards(TestBoardVO tb, @PathVariable int pageNum,@PathVariable int pageSize){
+		PageInfo<TestBoardVO> pageInfo = 
+				new PageInfo<>(tbService.selectTestBoardList(tb,pageNum, pageSize));
+		return pageInfo;
 	}
-	@PostMapping("/tb/new")
+	
 	public int insertTestBoard(@RequestBody TestBoardVO tb) {
 		return tbService.insertTestBoard(tb);
 	}
