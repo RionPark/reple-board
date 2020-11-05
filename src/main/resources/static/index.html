@@ -7,7 +7,7 @@
 <script src="/jqgrid/js/jquery-1.7.2.min.js"></script>
 <script src="/jqgrid/js/i18n/grid.locale-kr.js"></script>
 <script src="/jqgrid/js/jquery.jqGrid.min.js"></script>
-<script src="/js/RionGrid.js"></script>
+<script src="/js/CustomGrid.js"></script>
 <style>
 ul li{
 	list-style:none;
@@ -30,7 +30,7 @@ ul li.active{
 	<div id="page"></div>
 </div>
 <script>	
-var pageNum = 11;
+var pageNum = 1;
 var pageSize = 10;
 var blockSize = 10;
 $(document).ready(function(){
@@ -46,7 +46,10 @@ function getData(pageNum){
 			{label:'작성자',name:'tbWriter',width:100},
 			{label:'작성일',name:'tbCredat',width:150}
 		],
-		pageCallBack : generatePagination
+		pageCallBack : generatePagination,
+		err:function(res){
+			alert('이건 공통 안따름 내가 할거임');
+		}
 	}
 	$('#grid').CustomGrid(config);
 }

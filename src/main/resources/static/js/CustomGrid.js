@@ -23,6 +23,16 @@ $.fn.CustomGrid = function(conf){
 				if(conf.pageCallBack){
 					conf.pageCallBack(res.total);
 				}
+			},
+			error:function(err){
+				if(conf.err){
+					conf.err(err);
+					return;
+				}
+				var errObj = JSON.parse(err.responseText);
+				if(err.status==401 && errObj.errCode=='err01'){
+					alert('로그인하라고 이시끼야');
+				}
 			}
 		});
 	}
